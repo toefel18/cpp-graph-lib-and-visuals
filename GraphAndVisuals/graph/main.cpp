@@ -14,6 +14,8 @@ int main(int argc, char** argv)
 	DijkstraAlgorithmTester dijkstraTester;
 	dijkstraTester.runTests();
 
+
+
 	AdjacencyList<> graph;
 
 	typedef Vertex* point;
@@ -53,10 +55,15 @@ int main(int argc, char** argv)
 
 	DijkstraAlgorithm<> algorithm(graph);
 
-	DijkstraAlgorithm<>::ResultMap shortestPaths = algorithm.getShortestPaths(p1);
+	DijkstraAlgorithm<>::DistanceMap shortestDistances = algorithm.getShortestDistances(p1);
 
-	cout << "The paths from point" << p1->getName() << " to other nodes in the graph are: " << endl;
-	for(auto i = shortestPaths.begin(); i != shortestPaths.end(); ++i)
+	DijkstraAlgorithm<>::PathMap shortestPaths = algorithm.getShortestPaths(p1);
+
+	DijkstraAlgorithm<>::Path shortestPathP5 = algorithm.getShortestPath(p1, p5);
+
+
+	cout << endl << endl << "The paths from point" << p1->getName() << " to other nodes in the graph are: " << endl;
+	for(DijkstraAlgorithm<>::DistanceMap::iterator i = shortestDistances.begin(); i != shortestDistances.end(); ++i)
 	{
 		cout << " - point" << i->first->getName() << " has a shortest path of " << i->second << endl;
 	}

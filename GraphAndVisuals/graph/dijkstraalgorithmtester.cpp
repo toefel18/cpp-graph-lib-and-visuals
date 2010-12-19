@@ -10,24 +10,35 @@
 
 using namespace std;
 
+
+/* 
+* Test implementations
+* Last updated by Christophe Hesters, 19-12-2010 
+**/
+
 namespace graph
 {
-
-
 	void DijkstraAlgorithmTester::runTests()
 	{
 		using std::cout;
 
-		cout << "Testing HashMap (chaining) ... " << endl;
+		cout << "Testing DijkstraAlgorithm ... " << endl;
+		
+		testGetShortestDistances();
+		testGetShortestPath();
 		testGetShortestPaths();
+		
+		measureGetShortestDistances();
+		measureGetShortestPath();
 		measureGetShortestPaths();
+		
 		cout << "All tests passed!" << endl;
 	}
 
 	
-	void DijkstraAlgorithmTester::testGetShortestPaths()
+	void DijkstraAlgorithmTester::testGetShortestDistances()
 	{
-		cout << "- Testing testGetShortestPaths() ... " << flush;
+		cout << "- Testing getShortestDistances() ... " << flush;
 
 		AdjacencyList<Vertex, Edge> graph;
 
@@ -35,7 +46,7 @@ namespace graph
 		
 		DijkstraAlgorithm<> algorithm(graph);
 		
-		DijkstraAlgorithm<>::ResultMap shortestPaths = algorithm.getShortestPaths(p1);
+		DijkstraAlgorithm<>::DistanceMap shortestPaths = algorithm.getShortestDistances(p1);
 	
 		assert(abs(shortestPaths[p2] - 7) < 0.0001);
 		assert(abs(shortestPaths[p3] - 9) < 0.0001);
@@ -43,14 +54,73 @@ namespace graph
 		assert(abs(shortestPaths[p5] - 20) < 0.0001);
 		assert(abs(shortestPaths[p6] - 11) < 0.0001);
 	
+		//todo, add more tests!
+
 		tearDown(graph);
 		
 		cout << "Passed!" << endl;
 	}
 
+	void DijkstraAlgorithmTester::testGetShortestPath()
+	{
+		cout << "- Testing getShortestPath() ... " << flush;
+		AdjacencyList<Vertex, Edge> graph;
+
+		setup(graph);
+
+		//implement here
+
+		tearDown(graph);
+		
+		cout << "Passed!" << endl;
+	}
+
+	void DijkstraAlgorithmTester::testGetShortestPaths()
+	{
+		cout << "- Testing getShortestPaths() ... " << flush;
+		AdjacencyList<Vertex, Edge> graph;
+
+		setup(graph);
+
+		//implement here
+
+		tearDown(graph);
+		
+		cout << "Passed!" << endl;
+	}
+		
+	void DijkstraAlgorithmTester::measureGetShortestPath()
+	{
+		cout << "- measuring getShortestPath() ... " << flush;
+		AdjacencyList<Vertex, Edge> graph;
+
+		setup(graph);
+
+		//implement here
+
+		
+		tearDown(graph);
+		
+		cout << "done!" << endl;
+	}
+
 	void DijkstraAlgorithmTester::measureGetShortestPaths()
 	{
-		cout << "- measuring testGetShortestPaths() ... " << flush;
+		cout << "- measuring getShortestPaths() ... " << flush;	
+		AdjacencyList<Vertex, Edge> graph;
+
+		setup(graph);
+
+		//implement here
+
+		tearDown(graph);
+		
+		cout << "done!" << endl;
+	}
+
+	void DijkstraAlgorithmTester::measureGetShortestDistances()
+	{
+		cout << "- measuring getShortestDistances() ... " << flush;
 		AdjacencyList<Vertex, Edge> graph;
 
 		setup(graph);
@@ -60,7 +130,7 @@ namespace graph
 		boost::posix_time::ptime startTime = boost::posix_time::microsec_clock::local_time();
 
 		for(int i = 0; i < TestRuns; i++)
-			DijkstraAlgorithm<>::ResultMap shortestPaths = algorithm.getShortestPaths(p1);
+			DijkstraAlgorithm<>::DistanceMap shortestPaths = algorithm.getShortestDistances(p1);
 
 		boost::posix_time::ptime endTime = boost::posix_time::microsec_clock::local_time();
 		boost::posix_time::time_duration duration = endTime.time_of_day() - startTime.time_of_day();

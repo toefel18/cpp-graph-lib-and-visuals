@@ -15,7 +15,7 @@ namespace graph
 	class DijkstraAlgorithmTester
 	{
 	public:
-		static const int TestRuns = 5000;
+		static const int TestRuns = 100;
 
 		typedef Vertex* point;
 
@@ -27,7 +27,12 @@ namespace graph
 		
 		void runTests();
 
+		void testGetShortestDistances();
+		void testGetShortestPath();
 		void testGetShortestPaths();
+		
+		void measureGetShortestDistances();
+		void measureGetShortestPath();
 		void measureGetShortestPaths();
 	private:
 		point p1, p2, p3, p4, p5, p6;
