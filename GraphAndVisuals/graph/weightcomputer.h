@@ -23,19 +23,6 @@ namespace graph
 		};
 	};
 
-	/* 
-	* Template specialized class for the Extended edge!
-	* Written by Christophe Hesters, 13-12-2010 (tested on VC++ 10.0 and mingw GCC 4.4)
-	**/
-	template <>
-	class WeightComputer <ExtendedEdge>
-	{
-	public:
-		inline float operator()(const ExtendedEdge &edge) const
-		{
-			return edge.getDistance();
-		};
-	};
 }
 
 #endif //GRAPH_WEIGHTCOMPUTER_H

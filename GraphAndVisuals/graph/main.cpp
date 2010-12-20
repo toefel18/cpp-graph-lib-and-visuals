@@ -13,9 +13,7 @@ int main(int argc, char** argv)
 
 	DijkstraAlgorithmTester dijkstraTester;
 	dijkstraTester.runTests();
-
-
-
+	
 	AdjacencyList<> graph;
 
 	typedef Vertex* point;
@@ -69,7 +67,7 @@ int main(int argc, char** argv)
 	}
 
 	cin.get();
-	delete p1, p2, p3, p4, p5, p6;
+	graph.deleteAllVertices();
 
 	return 0;
 }

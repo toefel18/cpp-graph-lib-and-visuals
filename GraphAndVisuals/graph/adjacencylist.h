@@ -96,12 +96,7 @@ namespace graph
 		typedef std::list< EdgeInfo > NeighbourList;
 		typedef std::map<V*, NeighbourList > Graph;
 		typedef ConstGraphEdgeIterator<V, E, NeighbourList> ConstEdgeIterator;
-
-		//Graph will boil down to:
-		//std::map<V*, std::list< std::pair<V*, E> > >
 		
-		
-
 		AdjacencyList();
 
 		//does not delete the vertices!
@@ -128,18 +123,7 @@ namespace graph
 		//*  if directed = true, the the oposite direction will also be removed if exists!
 		//*/
 		//void removeEdge(V* from, V* to, const E& edge, bool directed = false);
-
-		//TODO, convert reference to pointer and return 0 if not exists?
-		//TODO, implement iterator
-
-		///* DEPRICATED USE ITERATORS!!!!
-		//*  returns a list with all the vertices reachable from vertex from
-		//*  
-		//*  from is the vertex whose neighbours will be returned
-		//*  returns a constant list with neighbours and corresponding edge descriptors!
-		//*/
-		//const NeighbourList& getNeighbours(V *from) const;
-		
+				
 		/*
 		* THESE ITERATORS ARE READ-ONLY! No modification provided yet!
 		*/
@@ -242,22 +226,6 @@ namespace graph
 	//		typename Graph::iterator toVertex = graph.find(to);
 	//
 	//	}
-	//}
-
-	//DEPRICATED, USE ITERATORS!
-	//template <class V, class E>
-	//const typename AdjacencyList<V, E>::NeighbourList& AdjacencyList<V, E>::getNeighbours(V *from) const
-	//{
-	//	typename Graph::const_iterator i = graph.find(from);
-	//	
-	//	if(i == graph.end())
-	//	{
-	//		if(vertices.find(from) == vertices.end())
-	//			throw std::logic_error("in getNeighbours(V*) -> vertex inside graph, but does not have any outgoing arcs!");
-	//
-	//		throw std::out_of_range("in getNeighbours(V*) -> vertex not inside the graph!");
-	//	}
-	//	return i->second;
 	//}
 
 	template <class V, class E>

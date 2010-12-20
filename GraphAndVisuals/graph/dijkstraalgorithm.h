@@ -85,7 +85,7 @@ namespace graph
 		*/
 		DistanceMap getShortestDistances(V* start, const Weight &weightComputer = Weight()) const;
 
-		/** Finds the shortest paths for all nodes starting frmo the start vertex (Re-entrant!)
+		/** Finds the shortest paths for all nodes starting from the start vertex (Re-entrant!)
 		*  start, the starting vertex
 		*  weightComputer object which computes the weight
 		*  returns a list with vertices and their corresponding edges from start to end!
@@ -257,7 +257,7 @@ namespace graph
 
 	template <class V, class E, class Weight, class Graph>
 	typename DijkstraAlgorithm<V, E, Weight, Graph>::PathMap 
-		DijkstraAlgorithm<V, E, Weight, Graph>::getShortestPaths(V* start, const Weight &weightComputer = Weight()) const
+		DijkstraAlgorithm<V, E, Weight, Graph>::getShortestPaths(V* start, const Weight &weightComputer) const
 	{
 		PathMap shortestPathTo;
 
@@ -265,72 +265,11 @@ namespace graph
 		computeShortestPaths(shortestPathTo, start, 0, weightComputer);
 
 		return shortestPathTo;
-
-		//PathDescPQueue priorityItems;
-		//VertexSet done;
-		//PathMap shortestPathTo;
-		//		
-		//// do not process paths leading to the start vertex anymore
-		//done.insert(start);
-
-		////add all neighbours to pqueue
-		////addItemsToPQueue(priorityItems, graph.getNeighbours(start), done, weightComputer, 0);		
-		//addItemsToPathDescPQueue(priorityItems, 
-		//	start,
-		//	graph.neighboursBegin(start), 
-		//	graph.neighboursEnd(start), 
-		//	done, weightComputer, 0);		
-
-		//while(!priorityItems.empty())
-		//{
-		//	//get the item with the highest priority and remove it from the queue
-		//	DistancePathDescriptor current(priorityItems.top());
-		//	priorityItems.pop();
-
-		//	//check if it's an item considered done! 
-		//	if( done.find(current.current) != done.end() )
-		//		//we already have the shortest path for this, skip this item
-		//		continue;
-		//	
-		//	//create the shortest path to the current vertex
-		//	Path& pathToCurrent = shortestPathTo[current.current];
-
-		//	if(current.previous != start)
-		//	{
-		//		const Path& shortestPathOfPrevious = shortestPathTo[current.previous];
-
-		//		//TODO mabybe it would be more efficient in time AND space, to include a reference
-		//		//to the path list of the previous node instead of copying it's complete path!
-		//		//(option: write an iterator that handles the referencing!)
-		//		pathToCurrent.insert(pathToCurrent.end(), 
-		//			shortestPathOfPrevious.begin(),
-		//			shortestPathOfPrevious.end());
-		//	}
-
-		//	// add the last step in the path to the current node!
-		//	pathToCurrent.push_back(EdgeInfo(current.current, *current.edge));
-
-		//	//shortestPathTo[current.current] now contains the shortest path from start to current.current!
-
-		//	//because the current item has the highest priority and 
-		//	//we processed it, we are done with that item!
-		//	done.insert(current.current);
-		//
-		//	//add all neighbours of the current item, pass the current nodes shortest path as current distance!
-		//	//addItemsToPQueue(priorityItems, graph.getNeighbours(current.first), done, weightComputer, current.second);
-		//	addItemsToPathDescPQueue(priorityItems, 
-		//		current.current,
-		//		graph.neighboursBegin(current.current), 
-		//		graph.neighboursEnd(current.current), 
-		//		done, weightComputer, current.distance);	
-		//}
-
-		//return shortestPathTo;
 	}
 
 	template <class V, class E, class Weight, class Graph>
 	void DijkstraAlgorithm<V, E, Weight, Graph>::computeShortestPaths(PathMap& shortestPathTo,
-		V* start, V* end, const Weight &weightComputer = Weight()) const
+		V* start, V* end, const Weight &weightComputer) const
 	{
 		PathDescPQueue priorityItems;
 		VertexSet done;
@@ -397,7 +336,7 @@ namespace graph
 
 	template <class V, class E, class Weight, class Graph>
 	typename DijkstraAlgorithm<V, E, Weight, Graph>::Path 
-		DijkstraAlgorithm<V, E, Weight, Graph>::getShortestPath(V* start, V* end, const Weight &weightComputer = Weight()) const
+		DijkstraAlgorithm<V, E, Weight, Graph>::getShortestPath(V* start, V* end, const Weight &weightComputer) const
 	{
 		PathMap shortestPathTo;
 
