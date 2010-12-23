@@ -6,12 +6,13 @@ namespace graph
 {
 	class Vertex;
 
-	/* 
-	* DijkstraAlgorithm Tester
-	* Tests the dijkstra algorithm
+	/*! 
+	* \brief Tests the dijkstra algorithm
 	*
-	* Written by Christophe Hesters, 14-12-2010 (tested on MSVC++ 10.0 and GCC 4.4 (with -std=gnu++0x))
-	**/
+	* \author Christophe Hesters
+	* \date 14-12-2010 
+	* \note tested on MSVC++ 10.0 and GCC 4.4 (with -std=gnu++0x)
+	*/
 	class DijkstraAlgorithmTester
 	{
 	public:

@@ -3,21 +3,32 @@
 
 namespace graph
 {
-	/* 
-	* Edge
-	* Describes an edge between to vertices in a graph
+
+	/*!
+	* \brief Describes an edge between to vertices in a graph
 	*
-	* Written by Christophe Hesters, 12-12-2010 (tested on VC++ 10.0 and mingw GCC 4.4)
-	**/
+	* \author Christophe Hesters 
+	* \date	12-12-2010 
+	* \note tested on VC++ 10.0 and mingw GCC 4.4
+	*/
 	class Edge
 	{
 		float distance;
 
 	public:
-
+		/*!
+		* \brief Constructs an edge
+		* 
+		* \param distance the distance, or weight, of this edge
+		*/
 		Edge(float distance)
 			:distance(distance) {}
 
+		/*!
+		* \brief gets the distance property of this edge
+		* 
+		* \returns the distance
+		*/
 		float getDistance() const {return distance;}
 	};
 }

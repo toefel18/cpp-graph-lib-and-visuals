@@ -10,11 +10,17 @@
 
 namespace graph
 {
-	/**
-	* Const Edge iterator, iterates over the edges, provides an abstraction for getting
-	* the neighbour and the edge information! You can not adjust the graph trough this iterator!
+	/*!
+	* \brief Const edge iterator, iterates over the edges, provides an abstraction for getting
+	*		 the neighbour Vertices and the edge information! You can not adjust the graph trough this iterator!
 	*
-	* Written by Christophe Hesters, 19-12-2010 (tested on VC++ 10.0 and mingw GCC 4.4)
+	* \tparam V the Vertex type
+	* \tparam E the edge type
+	* \tparam NeighbourList the type of the list that contains the neighbours of a vertex
+	*
+	* \author Christophe Hesters 
+	* \date	19-12-2010 
+	* \note tested on VC++ 10.0 and mingw GCC 4.4
 	*/
 	template <class V, class E, class NeighbourList>
 	class ConstGraphEdgeIterator
@@ -23,67 +29,118 @@ namespace graph
 		typename NeighbourList::const_iterator listIter;
 		bool isValid;
 	public:
-		//construct invalid iterator
+
+		/*!
+		* \brief Constructs a default invalid iterator (null iterator)
+		*/
 		ConstGraphEdgeIterator() :isValid(false){}
 
-		//construct a valid iterator 
+		/*!
+		* \brief Constructs a valid iterator initialized with an iterator to 
+		*		 the neighbour list
+		* 
+		* \param listIter begin iterator of a the neighbourlist
+		*/
 		ConstGraphEdgeIterator(const typename NeighbourList::const_iterator& listIter)
 			:listIter(listIter), isValid(true){}
 
-		//copy constructor
+		/*!
+		* \brief Copy constructor
+		* 
+		* \param other an other iterator of the same type
+		*/
 		ConstGraphEdgeIterator(const ConstGraphEdgeIterator& other)
 			:listIter(other.listIter), isValid(other.isValid){}
 
-		//get the neighbour 
+		/*!
+		* \brief Gets the vertex the iterator currently points to
+		* 
+		* \returns the current vertex
+		*/
 		V* vertex() const { return listIter->first; }
 
-		//get the edge descriptor between the current node and the neighbour
+		/*!
+		* \brief Gets the edge the iterator currently points to
+		* 
+		* \returns the current edge
+		*/
 		const E& edge() const { return listIter->second; }
 
-		//check if this iterator is valid! (1 element past the end is also VALID!) 
-		//invalid means: empty, there are NO elements, valid means, there are elements
-		//to iterate!
+		/*!
+		* \brief check if this iterator is valid! (1 element past the end is also VALID!) 
+		*		 invalid means: empty, there are NO elements, valid means, there are elements
+		*		 to iterate!
+		* 
+		* \returns true on valid, false if invalid
+		*/
 		bool valid() const {return isValid;}
 
-		//prefix operator
+		/*!
+		* \brief Increments this iterator (prefix notation)
+		* \returns reference to this (which is an incremented iterator)
+		*/
 		ConstGraphEdgeIterator& operator++(){++listIter; return *this;}
 
-		//postfix operator
+		/*!
+		* \brief Increments this iterator (postfix notation)
+		* \returns copy of the iterator in its original (unincremented) state
+		*/
 		ConstGraphEdgeIterator operator++(int){
 			ConstGraphEdgeIterator temp = *this;
 			++listIter;
 			return temp;
 		}
 
-		//prefix operator
+		/*!
+		* \brief Decrements this iterator (prefix notation)
+		* \returns reference to this (which is a decremented iterator)
+		*/
 		ConstGraphEdgeIterator& operator--(){--listIter; return *this;}
 
-		//postfix operator
+		/*!
+		* \brief Decrements this iterator (postfix notation)
+		* \returns copy of the iterator in its original (undecrimented) state
+		*/
 		ConstGraphEdgeIterator operator--(int){				
 			ConstGraphEdgeIterator temp = *this;
 			--listIter;
 			return temp;
 		}
 
-		//equalty operator
+		/*!
+		* \brief Compares this iterator to another for equalty
+		*
+		* \param other the other edge iterator
+		* \todo review: should 2 invalid iterators be equal?
+		* \returns true if the same, false otherwise (two invalid iterators are NOT equal!)
+		*/
 		bool operator==(const ConstGraphEdgeIterator& other) const{
 			return (isValid && other.isValid) ? listIter == other.listIter : false;
 		}
 
-		//inequalty operator
+		/*!
+		* \brief Compares this iterator to another for inequalty
+		*
+		* \param other the other edge iterator
+		* \todo review: should 2 invalid iterators be equal?
+		* \returns true if the different, false otherwise (two invalid iterators are NOT equal!)
+		*/
 		bool operator!=(const ConstGraphEdgeIterator& other) const{
 			return (isValid && other.isValid) ? (listIter != other.listIter) : true;
 		}
 	};
 
-	/* 
-	* Generic Adjacency List 
-	* represents a graph in an adjacency list
-	* V represents a vertex in the graph. Internally we will only deal with pointers to V
-	* E represents an edge between to vertices in the graph. E must be copy constructable!
+	/*!
+	* \brief Represents a graph in as an adjacency list
 	*
-	* Written by Christophe Hesters, 12-12-2010 (tested on VC++ 10.0 and mingw GCC 4.4)
-	**/
+	* \tparam V represents a vertex in the graph. Internally, only pointers to V are kept
+	* \tparam E represents an edge between to vertices in the graph. E must be copy constructable!
+	* \tparam NeighbourList the type of the list that contains the neighbours of a vertex
+	*
+	* \author Christophe Hesters 
+	* \date	12-12-2010 
+	* \note tested on VC++ 10.0 and mingw GCC 4.4
+	*/
 	template <class V = Vertex, class E = Edge>
 	class AdjacencyList
 	{
@@ -97,22 +154,35 @@ namespace graph
 		typedef std::map<V*, NeighbourList > Graph;
 		typedef ConstGraphEdgeIterator<V, E, NeighbourList> ConstEdgeIterator;
 		
+		/*!
+		* \brief Constructs an adjacency list graph object
+		*/
 		AdjacencyList();
 
-		//does not delete the vertices!
+		/*!
+		* \brief Destructor, does not delete the contained vertices
+		*	     that has to be done explicity trough the method 
+		*		 deleteAllVertices() 
+		*/
 		~AdjacencyList();
 
-		/* adds a vertex to the graph, but does not take ownership!
+		/*!
+		* \brief Adds a vertex to the graph, but does not take ownership.
+		*		 A call to this method is not necessary because addEdge
+		*		 also puts vertices inside the graph if they aren't already
 		*
-		*  vertex a point to include in the graph
+		* \param vertex a point to include in the graph
 		*/
 		void addVertex(V *vertex);
 
-		/* adds a vertex to the graph, but does not take ownership!
+		/*!
+		* \brief Connects two vertices together with an edge
 		*
-		*  from and to are pointers to existing vertices (they will be added to the graph if unkown!)
-		*  edge is an object that describes an edge, must be copy constructable
-		*  directed, if false we add an extra edge from ´to´ to ´from´
+		* \param from pointer to the start vertex (will be added to the graph if it is not in the graph already)
+		* \param to pointer to the end end vertex (will be added to the graph if it is not in the graph already)
+		* \param edge the edge descriptor (will be copied) 
+		* \param directed if false we add an extra edge from ´to´ to ´from´.
+		*		 this is default behaviour and creates an undirected graph
 		*/
 		void addEdge(V *from, V *to, const E& edge, bool directed = false);
 
@@ -124,35 +194,72 @@ namespace graph
 		//*/
 		//void removeEdge(V* from, V* to, const E& edge, bool directed = false);
 				
-		/*
-		* THESE ITERATORS ARE READ-ONLY! No modification provided yet!
-		*/
 
-		//begin iterator for the neighbours and their edges, if iterator.valid() == false, there are none!
+		/*!
+		* \brief Gets a const iterator to the begin of the list of neighbour
+		*		 vertices reachable from the 'from' vertex, or an invalid  
+		*	     iterator if there are no neighbours. 
+		*
+		* \note analogous to the stl containers .begin() members!
+		*
+		* \param from pointer to the vertex you want the neighbours from
+		* 
+		* \returns a constant edge iterator to the beginning of the list, or a null iterator (cannot modify the graph trough this iterator)
+		*/
 		ConstEdgeIterator neighboursBegin(V *from) const;
 
-		//end iterator for the neighbours and their edges, if iterator.valid() == false, there are none!
+		/*!
+		* \brief Gets a const iterator to the end of the list of neighbour 
+		*		 vertices reachable from the 'from' vertex, or an invalid  
+		*	     iterator if there are no neighbours. 
+		*
+		* \note analogous to the stl containers .end() members!
+		*
+		* \param from pointer to the vertex you want the neighbours from
+		* 
+		* \returns  a constant edge iterator to the end of the list, or a null iterator (cannot modify the graph trough this iterator)
+		*/
 		ConstEdgeIterator neighboursEnd(V *from) const;
 
-		//an iterator to the first of all the known vertices in the graph
+		/*!
+		* \brief Const iterator to the begin of the set of iterators
+		*
+		* \returns ConstVertexSetItr;
+		*/
 		ConstVertexSetItr vertexBegin() const {return vertices.begin();}
 
-		//an iterator to 1 past the end of all the known vertices in the graph
+		/*!
+		* \brief Const iterator to the 1 past the end of the set of iterators
+		*
+		* \returns ConstVertexSetItr;
+		*/
 		ConstVertexSetItr vertexEnd() const {return vertices.end();}
 
-		//returns the number of vertices in this graph
+		/*!
+		* \brief Gets the number of vertices in the graph.
+		*
+		* \returns number of vertices in the graph;
+		*/
 		int getNumVertices() const {return numVertices;}
 		
-		//returns the number of edges in this graph
+		/*!
+		* \brief Gets the number of edges in the graph.
+		*
+		* \returns number of edges in the graph;
+		*/
 		int getNumEdges() const {return numEdges;}
 
-		//deletes all vertices in this set! (this is not done by the destructor automatically!)
+		/*!
+		* \brief Deletes all the vertices in the graph
+		*        by invoking the delete operator on them
+		*		 (this is not done by the destructor
+		*		  because this class does not take ownership!)
+		*/
 		void deleteAllVertices();
 	
 	protected:
 		VertexSet vertices;
 
-		//std::map<V*, std::list< std::pair<V*, E> > > graph;
 		Graph graph;
 
 		int numVertices;
@@ -179,8 +286,6 @@ namespace graph
 		++numVertices;
 	}
 
-
-	//test if those vertices are in the list! if not add them?
 	template <class V, class E>
 	void AdjacencyList<V, E>::addEdge(V *from, V *to, const E& edge, bool directed)
 	{

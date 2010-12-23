@@ -14,22 +14,26 @@
 namespace graph
 {
 
-	/* 
-	* Dijkstra Shortest Paths algorithm 
+	/*!
+	* \brief Dijkstra Shortest Paths algorithm 
 	*
-	* V represents a vertex in the graph. Internally we will only deal with pointers to V
-	* E represents an edge between to vertices in the graph. E must be copy constructable!
-	* Weight a functor with this signature: float operator()(const E &edge) const
-	* Graph is the object that contains the graph! it must provide 'const NeighbourList& getNeighbours(V *from) const;'
+	* \tparam V represents a vertex in the graph. Internally, only pointers to V are kept
+	* \tparam E represents an edge between to vertices in the graph. E must be copy constructable!
+	* \tparam Weight a functor with this signature: float operator()(const E &edge) const
+	* \tparam Graph the object type that contains the graph! 
 	*
-	* Written by Christophe Hesters, 14-12-2010 (tested on VC++ 10.0 and mingw GCC 4.4)
-	**/
+	* \author Christophe Hesters 
+	* \date	14-12-2010 
+	* \note tested on VC++ 10.0 and mingw GCC 4.4
+	*/
 	template <class V = Vertex, class E = Edge, class Weight = WeightComputer<E>,  class Graph = AdjacencyList<V, E> >
 	class DijkstraAlgorithm
 	{	
 	public:
 	
-		//compare functor, priorityqueue expects the less function
+		/*!
+		 * \brief compare functor for pairs, comparing the second element to determine the order in pqueue
+		 */
 		template <class T> struct PairCompare{
 			inline bool operator() (const T& link1, const T& link2) const {
 				return link1.second > link2.second; //make sure the lowest compononents go first!
@@ -45,13 +49,14 @@ namespace graph
 					std::vector<Distance>,
 					PairCompare<Distance> > PQueue;
 		
+		/*Type declarations for tracing the complete path*/
 		typedef std::pair<V*, E> EdgeInfo;
-		/*it becomes a little bit more complex if we want to trace the complete path*/
 		typedef std::list< EdgeInfo > Path;
-		//maps shortest path from start to V*
-		typedef std::map<V*, Path> PathMap;
+		typedef std::map<V*, Path> PathMap; //maps shortest path from start to V*
 
-		//info we need to trace the complete path
+		/*!
+		 * \brief a structure used internally to keep track of the complete paths
+		 */
 		struct DistancePathDescriptor {
 			DistanceType distance; //the shortest distance from start node
 			V* previous; //the node that put the current node in the pqueue
@@ -62,7 +67,9 @@ namespace graph
 				:distance(distance), previous(previous), current(current), edge(edge) {}
 		};
 
-		//compare functor for the DistancePathDescriptor 
+		/*!
+		 * \brief a functor to compare the order of DistancePathDescriptor structs in a pqueue
+		 */
 		struct DistancePathDescriptorCompare{
 			inline bool operator() (const DistancePathDescriptor& desc1, const DistancePathDescriptor& desc2) const {
 				return desc1.distance > desc2.distance; //make sure the lowest compononents go first!
@@ -74,29 +81,44 @@ namespace graph
 					DistancePathDescriptorCompare > PathDescPQueue;
 
 	
-		//Create a dijkstra algorithm object, linking to a graph
+		/*!
+		 * \brief Constucts the algorithm for a given graph
+		 *
+		 * \param graph a reference to an instance of a Graph object
+		 */
 		DijkstraAlgorithm(const Graph &graph);
+
 		~DijkstraAlgorithm();
 
-		/** Finds all the shortest paths from the start vertex (Re-entrant!)
-		*  start, the starting vertex
-		*  weightComputer object which computes the weight
-		*  returns a map which maps Vertices to their shortest path lengths
+		/*! 
+		* \brief Finds all the shortest path lengths from the start 
+		*		 vertex to all the other reachable vertices (Re-entrant!)
+		*
+		* \param start the starting vertex to compute 
+		* \param weightComputer object which computes the weight (see testclass for instruction)
+		*
+		* \returns a map which maps Vertices to their shortest path lengths
 		*/
 		DistanceMap getShortestDistances(V* start, const Weight &weightComputer = Weight()) const;
 
-		/** Finds the shortest paths for all nodes starting from the start vertex (Re-entrant!)
-		*  start, the starting vertex
-		*  weightComputer object which computes the weight
-		*  returns a list with vertices and their corresponding edges from start to end!
+		/*! 
+		* \brief Finds the shortest paths for all nodes starting from the start vertex (Re-entrant!)
+		*
+		* \param start the starting vertex
+		* \param weightComputer object which computes the weight (see testclass for instruction)
+		*
+		* \returns a map that maps all reachable vertices to a list with their paths relative from the start vertex!
 		*/
 		PathMap getShortestPaths(V* start, const Weight &weightComputer = Weight()) const;
 
-		/** Finds the shortest path between the start vertex and the end vertex(Re-entrant!)
-		*  start, the starting vertex
-		*  end, the ending vertex
-		*  weightComputer object which computes the weight
-		*  returns a list with vertices and their corresponding edges from start to end!
+		/*! 
+		* \brief Finds the shortest paths from the start vertex to end vertex(Re-entrant!)
+		*
+		* \param start the starting vertex
+		* \param end the destination vertex
+		* \param weightComputer object which computes the weight (see testclass for instruction)
+		*
+		* \returns a list with the path from the start vertex to the end vertex!
 		*/
 		Path getShortestPath(V* start, V* end, const Weight &weightComputer = Weight()) const;
 
