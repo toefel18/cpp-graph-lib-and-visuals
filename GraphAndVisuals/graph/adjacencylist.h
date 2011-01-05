@@ -256,6 +256,12 @@ namespace graph
 		*		  because this class does not take ownership!)
 		*/
 		void deleteAllVertices();
+
+		/*!
+		 * \brief Returns whether the graph is directional (has only biderectional edges).
+		 * \return True if is directional, else false.
+		 */
+		bool isDirectional() const {return directional;}
 	
 	protected:
 		VertexSet vertices;
@@ -265,13 +271,15 @@ namespace graph
 		int numVertices;
 		int numEdges;
 
+		bool directional;
+
 		friend class DijkstraAlgorithmTester;
 	};
 
 
 	template <class V, class E>
 	AdjacencyList<V, E>::AdjacencyList()
-		:numVertices(0), numEdges(0)
+		:numVertices(0), numEdges(0), directional(true)
 	{}
 
 
@@ -311,6 +319,8 @@ namespace graph
 			graph[to].push_back(EdgeInfo(from, edge));
 			++numEdges;
 		}
+		else
+			directional = false;
 	}
 
 	//not yet implemented

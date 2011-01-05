@@ -78,6 +78,7 @@
     <ClInclude Include="dijkstraalgorithm.h" />
     <ClInclude Include="dijkstraalgorithmtester.h" />
     <ClInclude Include="edge.h" />
+    <ClInclude Include="kruskalalgorithm.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="weightcomputer.h" />
   </ItemGroup>

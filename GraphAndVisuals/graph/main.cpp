@@ -1,13 +1,17 @@
 #include <iostream>
+#include <tuple>
+#include <utility>
+
 #include "vertex.h"
 #include "edge.h"
 #include "adjacencylist.h"
 #include "dijkstraalgorithm.h"
 #include "dijkstraalgorithmTester.h"
+#include "kruskalalgorithm.h"
 
 using namespace std;
 
-int main(int argc, char** argv)
+void testDijkstra()
 {
 	using namespace graph;
 
@@ -59,15 +63,81 @@ int main(int argc, char** argv)
 
 	DijkstraAlgorithm<>::Path shortestPathP5 = algorithm.getShortestPath(p1, p5);
 
-
 	cout << endl << endl << "The paths from point" << p1->getName() << " to other nodes in the graph are: " << endl;
+	
 	for(DijkstraAlgorithm<>::DistanceMap::iterator i = shortestDistances.begin(); i != shortestDistances.end(); ++i)
 	{
 		cout << " - point" << i->first->getName() << " has a shortest path of " << i->second << endl;
 	}
 
-	cin.get();
 	graph.deleteAllVertices();
+}
+
+void testKruskal()
+{
+	using namespace graph;
+
+	AdjacencyList<> graph;
+
+	typedef Vertex* point;
+	
+	//models this graph: http://en.wikipedia.org/wiki/Kruskal%27s_algorithm#Example
+	point pa = point(new Vertex("A")); 
+	point pb = point(new Vertex("B")); 
+	point pc = point(new Vertex("C"));	
+	point pd = point(new Vertex("D"));	
+	point pe = point(new Vertex("E"));	
+	point pf = point(new Vertex("F"));
+	point pg = point(new Vertex("G"));	
+	
+	graph.addVertex(pa);
+	graph.addVertex(pb);
+	graph.addVertex(pc);
+	graph.addVertex(pd);
+	graph.addVertex(pe);
+	graph.addVertex(pf);
+	graph.addVertex(pg);
+	
+	graph.addEdge(pa, pb, Edge(7));
+	graph.addEdge(pa, pd, Edge(5));
+	
+	graph.addEdge(pb, pa, Edge(7));
+	graph.addEdge(pb, pc, Edge(8));
+	graph.addEdge(pb, pd, Edge(9));
+	graph.addEdge(pb, pe, Edge(7));
+	
+	graph.addEdge(pc, pe, Edge(5));
+	
+	graph.addEdge(pd, pe, Edge(15));
+	graph.addEdge(pd, pf, Edge(6));
+	
+	graph.addEdge(pe, pf, Edge(8));
+	graph.addEdge(pe, pg, Edge(9));
+	
+	// Test algorithm.
+	KruskalAlgorithm<> algorithm(graph);
+
+	KruskalAlgorithm<>::EdgeMap minimumSpanningTree = algorithm.getMinimumSpanningTree();
+
+	cout << endl << endl << "A minimum spanning tree contains the following edges:" << endl;
+
+	for(KruskalAlgorithm<>::EdgeMap::iterator edgeInfo = minimumSpanningTree.begin(), endEdgeInfo = minimumSpanningTree.end(); edgeInfo != endEdgeInfo; ++edgeInfo)
+	{
+		cout << " - edge with distance " << std::get<0>(*edgeInfo)->getDistance() << " from vertex " << std::get<1>(*edgeInfo)->getName() << " to vertex " << std::get<2>(*edgeInfo)->getName() << endl;
+	}
+
+	// Clean up.
+	graph.deleteAllVertices();
+}
+
+int main(int argc, char** argv)
+{
+	//testDijkstra();
+	testKruskal();
+
+	cout << "Press enter to close.." << endl;
+
+	cin.get();
 
 	return 0;
 }
