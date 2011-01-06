@@ -1,14 +1,16 @@
-#include "astaralgorithmtester.h"
 #include <iostream>
-#include "vertex.h"
-#include "edge.h"
-#include "weightcomputer.h"
-#include "heuristic.h"
-#include "adjacencylist.h"
-#include "astaralgorithm.h"
 #include <cassert>
 #include <cmath>
 #include <boost/date_time/posix_time/posix_time.hpp>
+
+#include "../graph/vertex.h"
+#include "../graph/edge.h"
+#include "../graph/weightcomputer.h"
+#include "../graph/../graph/heuristic.h"
+#include "../graph/adjacencylist.h"
+#include "../graph/astaralgorithm.h"
+
+#include "astaralgorithmtester.h"
 
 using namespace std;
 
@@ -168,8 +170,6 @@ namespace graph
 		assert(it->first == p5);
 		assert(abs(it->second.getDistance() - 9) < precision);
 
-		tearDown(graph);
-
 		cout << "1 " << flush;
 
 		//test generics!
@@ -194,8 +194,6 @@ namespace graph
 		assert(speedPath.begin()->first == p3);
 		assert((++speedPath.begin())->first == p4);
 
-		tearDown(myGraph);
-		
 		cout << "2 " << flush;
 
 		//test heuristics!
@@ -217,8 +215,6 @@ namespace graph
 		//there has to be found a cleaner way to test the heuristic! 
 		//this verifiction code has been removed
 
-		tearDown(myHeuristicGraph);
-		
 		cout << "3 " << flush;
 
 		//ADD TEST THAT COMBINES HEURISTIC WITH WEIGHT COMPUTER, SELECT DIFFERENT WEIGHT SO TO SEE
@@ -252,8 +248,6 @@ namespace graph
 			 << "  - " << graph.getNumVertices() << " vertices and " << graph.getNumEdges() << " edges" << endl
 			 << "  - took " << duration << endl;
 
-		tearDown(graph);
-		
 		cout << "done!" << endl;
 	}
 		
@@ -359,12 +353,6 @@ namespace graph
 		assert(myGraph.getNumVertices() == 9);
 	}	
 
-	template <typename Graph>
-	void AStarAlgorithmTester::tearDown(Graph &graph)
-	{
-		//any teardown code needed
-	}
-	
 	void AStarAlgorithmTester::initVertices()
 	{
 		p1 = point(new Vertex("1")); 

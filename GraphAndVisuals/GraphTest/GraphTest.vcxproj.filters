@@ -15,32 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="adjacencylist.h">
+    <ClInclude Include="astaralgorithmtester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dijkstraalgorithm.h">
+    <ClInclude Include="dijkstraalgorithmtester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="edge.h">
+    <ClInclude Include="mstalgorithmstester.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="weightcomputer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="kruskalalgorithm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="astaralgorithm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="heuristic.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="primalgorithm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="astaralgorithmtester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dijkstraalgorithmtester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mstalgorithmstester.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

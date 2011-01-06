@@ -1,13 +1,15 @@
-#include "dijkstraalgorithmtester.h"
 #include <iostream>
-#include "vertex.h"
-#include "edge.h"
-#include "weightcomputer.h"
-#include "adjacencylist.h"
-#include "dijkstraalgorithm.h"
 #include <cassert>
 #include <cmath>
 #include <boost/date_time/posix_time/posix_time.hpp>
+
+#include "../graph/vertex.h"
+#include "../graph/edge.h"
+#include "../graph/weightcomputer.h"
+#include "../graph/adjacencylist.h"
+#include "../graph/dijkstraalgorithm.h"
+
+#include "dijkstraalgorithmtester.h"
 
 using namespace std;
 
@@ -94,8 +96,6 @@ namespace graph
 		assert(abs(shortestDistances[p5] - 20) < precision);
 		assert(abs(shortestDistances[p6] - 11) < precision);
 	
-		tearDown(graph); 
-	
 		//test generics!
 		typedef AdjacencyList<Vertex, MyEdge> CustomGraph;
 		typedef DijkstraAlgorithm<Vertex, MyEdge, MyWeightComputer, CustomGraph> CustomDijkstra;
@@ -121,8 +121,6 @@ namespace graph
 		assert(abs(speedingPaths[p2] - 1) < precision);
 		assert(abs(speedingPaths[p3] - 30) < precision);
 		
-		tearDown(myGraph);
-
 		cout << "Passed!" << endl;
 	}
 
@@ -149,9 +147,6 @@ namespace graph
 		assert(it->first == p5);
 		assert(abs(it->second.getDistance() - 9) < precision);
 
-		tearDown(graph);
-
-
 		//test generics!
 		typedef AdjacencyList<Vertex, MyEdge> CustomGraph;
 		typedef DijkstraAlgorithm<Vertex, MyEdge, MyWeightComputer, CustomGraph> CustomDijkstra;
@@ -174,8 +169,6 @@ namespace graph
 		assert(speedPath.begin()->first == p3);
 		assert((++speedPath.begin())->first == p4);
 
-		tearDown(myGraph);
-		
 		cout << "Passed!" << endl;
 	}
 
@@ -222,9 +215,6 @@ namespace graph
 		assert(abs(it->second.getDistance() - 7) < precision);
 		assert(++it == shortestPaths[p2].end());
 
-		tearDown(graph);
-
-
 		//test generics!
 		typedef AdjacencyList<Vertex, MyEdge> CustomGraph;
 		typedef DijkstraAlgorithm<Vertex, MyEdge, MyWeightComputer, CustomGraph> CustomDijkstra;
@@ -261,8 +251,6 @@ namespace graph
 		assert(abs(customIt->second.getSpeed() - 70) < precision);
 		assert(++customIt == speedPaths[p4].end());
 
-		tearDown(myGraph);
-		
 		cout << "Passed!" << endl;
 	}
 		
@@ -291,8 +279,6 @@ namespace graph
 			 << "  - " << graph.getNumVertices() << " vertices and " << graph.getNumEdges() << " edges" << endl
 			 << "  - took " << duration << endl;
 
-		tearDown(graph);
-		
 		cout << "done!" << endl;
 	}
 
@@ -318,8 +304,6 @@ namespace graph
 			 << "  - " << graph.getNumVertices() << " vertices and " << graph.getNumEdges() << " edges" << endl
 			 << "  - took " << duration << endl;
 
-		tearDown(graph);
-		
 		cout << "done!" << endl;
 	}
 
@@ -345,8 +329,6 @@ namespace graph
 			 << "  - " << graph.getNumVertices() << " vertices and " << graph.getNumEdges() << " edges" << endl
 			 << "  - took " << duration << endl;
 	
-		tearDown(graph);
-		
 		cout << "done!" << endl;
 	}
 
@@ -409,12 +391,6 @@ namespace graph
 			assert(myGraph.getNumVertices() == 4);
 			assert(myGraph.getNumEdges() == 8);
 	}	
-
-	template <typename Graph>
-	void DijkstraAlgorithmTester::tearDown(Graph &graph)
-	{
-		//any teardown code needed
-	}
 	
 	void DijkstraAlgorithmTester::initVertices()
 	{

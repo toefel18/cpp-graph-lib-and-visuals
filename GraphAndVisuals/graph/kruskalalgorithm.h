@@ -8,7 +8,10 @@
 #include <set>
 #include <iterator>
 #include <hash_map>
+#include <tuple>
 
+#include "vertex.h"
+#include "edge.h"
 #include "adjacencylist.h"
 #include "weightcomputer.h"
 
@@ -42,7 +45,7 @@ namespace graph
 		struct EdgeDistanceComparer
 		{
 			inline bool operator() (const Edge *edge1, const Edge *edge2) const {
-				return edge1->getDistance() > edge2->getDistance();
+				return edge1->getDistance() < edge2->getDistance();
 			}
 		};
 
@@ -95,11 +98,15 @@ namespace graph
 		// Use list for fast inserts/removes because the forest growes and shrinks fast.
 		typedef std::list<V*> ForestGraph;
 		typedef std::pair<V*, V*> VertexPair;
+		 
+		// Usa a ordered map to quickly find the best edge. This multimap seems to be quicked then others.
+		typedef std::multimap<const E*, const E*, EdgeDistanceComparer> OrderedEdges;
 
-		// Use a (unordered) hashmap with pretty constant key lookups, to map edges to vertices.
-		typedef std::hash_map<const E*, VertexPair> Edge2vertices;
+		// Use a map with pretty constant key lookups, to map edges to vertices.
+		typedef std::map<const E*, VertexPair> Edge2vertices;
 
-		// Contains a forest (a set of trees), where each vertex in the graph is a separate graph.
+		// Contains a forest (a set of trees), where each vertex in the graph is a separate graph,
+		// may have some serieus add/removals.
 		std::list<ForestGraph*> forest;
 
 		// Map for speeding up vertex to forestgraph search.
@@ -130,20 +137,18 @@ namespace graph
 			// Get edges and map it to vertices. Due the map edges will be unique.
 			for(Graph::ConstEdgeIterator neighbourVertices = graph.neighboursBegin(*vertices),
 				endNeighbourVertices = graph.neighboursEnd(*vertices);
-				neighbourVertices != endNeighbourVertices; ++neighbourVertices)
+				neighbourVertices.valid() && neighbourVertices != endNeighbourVertices; ++neighbourVertices)
 			{
 				edge2vertices.insert(std::pair<const E*, VertexPair>(&(neighbourVertices.edge()), VertexPair(*vertices, neighbourVertices.vertex())));
 			}
 		}
 
 		// Create a list containing all the edges in the graph, sorted by distance.
-		std::priority_queue<const E*,
-					std::vector<const E*>,
-					EdgeDistanceComparer> orderedEdges;
+		OrderedEdges orderedEdges;
 
 		for(Edge2vertices::const_iterator it = edge2vertices.begin(), end = edge2vertices.end(); it != end; ++it)
 		{
-			orderedEdges.push((*it).first);
+			orderedEdges.insert(std::pair<const E*, const E*>((*it).first, (*it).first));
 		}
 
 		EdgeMap edgeMap;
@@ -152,9 +157,11 @@ namespace graph
 		while(!orderedEdges.empty() && forest.size() > 1)
 		{
 			// Obtain and remove an edge with minimum weight from edges.
-			const E* minimalEdge = orderedEdges.top();
+			OrderedEdges::const_iterator bestEdgeIterator = orderedEdges.begin();
+		
+			const E* minimalEdge = (*bestEdgeIterator).first;
 
-			orderedEdges.pop();
+			orderedEdges.erase(bestEdgeIterator);
 
 			// Does the edge connects two different trees?
 			VertexPair vertices = edge2vertices[minimalEdge];
@@ -181,6 +188,10 @@ namespace graph
 				edgeMap.push_back(EdgeMapItem(minimalEdge, vertexA, vertexB));
 			}
 		}
+
+		// No MST exists if forest does not contain a single graph.
+		if(forest.size() != 1)
+			return EdgeMap();
 
 		return edgeMap;
 	}

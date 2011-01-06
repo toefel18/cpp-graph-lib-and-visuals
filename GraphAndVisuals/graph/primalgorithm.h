@@ -4,13 +4,13 @@
 #include <map>
 #include <list>
 #include <utility>
-#include <queue>
 #include <set>
 #include <iterator>
-#include <hash_map>
 
-#include "adjacencylist.h"
-#include "weightcomputer.h"
+#include "../graph/adjacencylist.h"
+#include "../graph/weightcomputer.h"
+#include "../graph/vertex.h"
+#include "../graph/edge.h"
 
 namespace graph
 {
@@ -97,7 +97,7 @@ namespace graph
 		typedef std::pair<V*, V*> VertexPair;
 		
 		// Use ordered balanced binary tree for fast best edge lookups (always root item) and to map edges to vertices.
-		typedef std::map<const E*, VertexPair, EdgeDistanceComparer> Edge2vertices;
+		typedef std::multimap<const E*, VertexPair, EdgeDistanceComparer> Edge2vertices;
 
 		Graph::ConstVertexSetItr vertices = graph.vertexBegin(), endVertices = graph.vertexEnd();
 
@@ -137,7 +137,7 @@ namespace graph
 		while(reachedVertices.size() != graph.getNumVertices() && possibleEdges.size() > 0)
 		{
 			// Get best edge.
-		    Edge2vertices::const_iterator bestEdgeIterator = possibleEdges.begin();
+			Edge2vertices::const_iterator bestEdgeIterator = possibleEdges.begin();
 
 			const E* bestEdge = (*bestEdgeIterator).first;
 			V* reachedVertex = std::get<1>((*bestEdgeIterator).second);
@@ -172,6 +172,10 @@ namespace graph
 				}
 			}
 		}
+
+		// No MST exists if not all vertices are reached.
+		if(reachedVertices.size() != graph.getNumVertices())
+			return EdgeMap();
 
 		return selectedEdges;
 	}
