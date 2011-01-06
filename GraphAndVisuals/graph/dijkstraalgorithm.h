@@ -21,7 +21,7 @@ namespace graph
 	* \tparam E represents an edge between to vertices in the graph. E must be copy constructable!
 	* \tparam Weight a functor with this signature: float operator()(const E &edge) const
 	* \tparam Graph the object type that contains the graph! 
-	*
+    *
 	* \author Christophe Hesters 
 	* \date	14-12-2010 
 	* \note tested on VC++ 10.0 and mingw GCC 4.4
@@ -92,31 +92,34 @@ namespace graph
 
 		/*! 
 		* \brief Finds all the shortest path lengths from the start 
-		*		 vertex to all the other reachable vertices (Re-entrant!)
+        *		 vertex to all the other reachable vertices
 		*
 		* \param start the starting vertex to compute 
 		* \param weightComputer object which computes the weight (see testclass for instruction)
+        * \reentrant
 		*
 		* \returns a map which maps Vertices to their shortest path lengths
 		*/
 		DistanceMap getShortestDistances(V* start, const Weight &weightComputer = Weight()) const;
 
 		/*! 
-		* \brief Finds the shortest paths for all nodes starting from the start vertex (Re-entrant!)
+        * \brief Finds the shortest paths for all nodes starting from the start vertex
 		*
 		* \param start the starting vertex
 		* \param weightComputer object which computes the weight (see testclass for instruction)
+        * \reentrant
 		*
 		* \returns a map that maps all reachable vertices to a list with their paths relative from the start vertex!
 		*/
 		PathMap getShortestPaths(V* start, const Weight &weightComputer = Weight()) const;
 
 		/*! 
-		* \brief Finds the shortest paths from the start vertex to end vertex(Re-entrant!)
+        * \brief Finds the shortest paths from the start vertex to end vertex
 		*
 		* \param start the starting vertex
 		* \param end the destination vertex
 		* \param weightComputer object which computes the weight (see testclass for instruction)
+        * \reentrant
 		*
 		* \returns a list with the path from the start vertex to the end vertex!
 		*/

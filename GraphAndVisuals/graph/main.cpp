@@ -6,8 +6,9 @@
 #include "edge.h"
 #include "adjacencylist.h"
 #include "dijkstraalgorithm.h"
-#include "dijkstraalgorithmTester.h"
+#include "dijkstraalgorithmtester.h"
 #include "kruskalalgorithm.h"
+#include "astaralgorithmtester.h"
 
 using namespace std;
 
@@ -130,10 +131,18 @@ void testKruskal()
 	graph.deleteAllVertices();
 }
 
+void testAStar()
+{
+	using namespace graph;
+	AStarAlgorithmTester astarTester;
+	astarTester.runTests();
+}
+
 int main(int argc, char** argv)
 {
 	//testDijkstra();
-	testKruskal();
+	testAStar();
+	//testKruskal();
 
 	cout << "Press enter to close.." << endl;
 

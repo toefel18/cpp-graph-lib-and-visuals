@@ -75,14 +75,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="adjacencylist.h" />
+    <ClInclude Include="astaralgorithm.h" />
+    <ClInclude Include="astaralgorithmtester.h" />
     <ClInclude Include="dijkstraalgorithm.h" />
     <ClInclude Include="dijkstraalgorithmtester.h" />
     <ClInclude Include="edge.h" />
+    <ClInclude Include="heuristic.h" />
     <ClInclude Include="kruskalalgorithm.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="weightcomputer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="astaralgorithmtester.cpp" />
     <ClCompile Include="dijkstraalgorithmtester.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

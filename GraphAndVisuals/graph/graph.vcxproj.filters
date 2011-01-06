@@ -36,12 +36,24 @@
     <ClInclude Include="kruskalalgorithm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="astaralgorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="heuristic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="astaralgorithmtester.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dijkstraalgorithmtester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="astaralgorithmtester.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
