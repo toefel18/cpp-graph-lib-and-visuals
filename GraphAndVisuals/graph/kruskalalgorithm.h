@@ -91,11 +91,15 @@ namespace graph
 			throw new NonDirectionalGraphException();
 
 		typedef float DistanceType;
+
+		// Use list for fast inserts/removes because the forest growes and shrinks fast.
 		typedef std::list<V*> ForestGraph;
 		typedef std::pair<V*, V*> VertexPair;
+
+		// Use a (unordered) hashmap with pretty constant key lookups, to map edges to vertices.
 		typedef std::hash_map<const E*, VertexPair> Edge2vertices;
 
-		// Create a forest (a set of trees), where each vertex in the graph is a separate graph.
+		// Contains a forest (a set of trees), where each vertex in the graph is a separate graph.
 		std::list<ForestGraph*> forest;
 
 		// Map for speeding up vertex to forestgraph search.
@@ -155,8 +159,8 @@ namespace graph
 			// Does the edge connects two different trees?
 			VertexPair vertices = edge2vertices[minimalEdge];
 
-			V* vertexA = get<0>(vertices);
-			V* vertexB = get<1>(vertices);
+			V* vertexA = std::get<0>(vertices);
+			V* vertexB = std::get<1>(vertices);
 
 			ForestGraph* forestGraphA = vertices2ForestGraph[vertexA];
 			ForestGraph* forestGraphB = vertices2ForestGraph[vertexB];

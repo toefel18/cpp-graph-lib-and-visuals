@@ -82,6 +82,7 @@
     <ClInclude Include="edge.h" />
     <ClInclude Include="heuristic.h" />
     <ClInclude Include="kruskalalgorithm.h" />
+    <ClInclude Include="primalgorithm.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="weightcomputer.h" />
   </ItemGroup>

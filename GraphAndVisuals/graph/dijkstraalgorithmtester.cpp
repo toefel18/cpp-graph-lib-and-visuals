@@ -122,7 +122,7 @@ namespace graph
 		assert(abs(speedingPaths[p3] - 30) < precision);
 		
 		tearDown(myGraph);
-		
+
 		cout << "Passed!" << endl;
 	}
 

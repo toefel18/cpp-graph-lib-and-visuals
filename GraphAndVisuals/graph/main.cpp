@@ -8,6 +8,7 @@
 #include "dijkstraalgorithm.h"
 #include "dijkstraalgorithmtester.h"
 #include "kruskalalgorithm.h"
+#include "primalgorithm.h"
 #include "astaralgorithmtester.h"
 
 using namespace std;
@@ -102,7 +103,6 @@ void testKruskal()
 	graph.addEdge(pa, pb, Edge(7));
 	graph.addEdge(pa, pd, Edge(5));
 	
-	graph.addEdge(pb, pa, Edge(7));
 	graph.addEdge(pb, pc, Edge(8));
 	graph.addEdge(pb, pd, Edge(9));
 	graph.addEdge(pb, pe, Edge(7));
@@ -115,12 +115,72 @@ void testKruskal()
 	graph.addEdge(pe, pf, Edge(8));
 	graph.addEdge(pe, pg, Edge(9));
 	
+	graph.addEdge(pf, pg, Edge(11));
+
 	// Test algorithm.
 	KruskalAlgorithm<> algorithm(graph);
 
 	KruskalAlgorithm<>::EdgeMap minimumSpanningTree = algorithm.getMinimumSpanningTree();
 
-	cout << endl << endl << "A minimum spanning tree contains the following edges:" << endl;
+	cout << endl << endl << "A minimum spanning tree (found using Kruskal's Algorithm) contains the following edges:" << endl;
+
+	for(KruskalAlgorithm<>::EdgeMap::iterator edgeInfo = minimumSpanningTree.begin(), endEdgeInfo = minimumSpanningTree.end(); edgeInfo != endEdgeInfo; ++edgeInfo)
+	{
+		cout << " - edge with distance " << std::get<0>(*edgeInfo)->getDistance() << " from vertex " << std::get<1>(*edgeInfo)->getName() << " to vertex " << std::get<2>(*edgeInfo)->getName() << endl;
+	}
+
+	// Clean up.
+	graph.deleteAllVertices();
+}
+
+void testPrim()
+{
+	using namespace graph;
+
+	AdjacencyList<> graph;
+
+	typedef Vertex* point;
+	
+	//models this graph: http://en.wikipedia.org/wiki/Prim%27s_algorithm#Example
+	point pa = point(new Vertex("A")); 
+	point pb = point(new Vertex("B")); 
+	point pc = point(new Vertex("C"));	
+	point pd = point(new Vertex("D"));	
+	point pe = point(new Vertex("E"));	
+	point pf = point(new Vertex("F"));
+	point pg = point(new Vertex("G"));	
+	
+	graph.addVertex(pa);
+	graph.addVertex(pb);
+	graph.addVertex(pc);
+	graph.addVertex(pd);
+	graph.addVertex(pe);
+	graph.addVertex(pf);
+	graph.addVertex(pg);
+	
+	graph.addEdge(pa, pb, Edge(7));
+	graph.addEdge(pa, pd, Edge(5));
+	
+	graph.addEdge(pb, pc, Edge(8));
+	graph.addEdge(pb, pd, Edge(9));
+	graph.addEdge(pb, pe, Edge(7));
+	
+	graph.addEdge(pc, pe, Edge(5));
+	
+	graph.addEdge(pd, pe, Edge(15));
+	graph.addEdge(pd, pf, Edge(6));
+	
+	graph.addEdge(pe, pf, Edge(8));
+	graph.addEdge(pe, pg, Edge(9));
+	
+	graph.addEdge(pf, pg, Edge(11));
+
+	// Test algorithm.
+	PrimAlgorithm<> algorithm(graph);
+
+	PrimAlgorithm<>::EdgeMap minimumSpanningTree = algorithm.getMinimumSpanningTree(pd);
+
+	cout << endl << endl << "A minimum spanning tree (found using Prim's Algorithm) contains the following edges:" << endl;
 
 	for(KruskalAlgorithm<>::EdgeMap::iterator edgeInfo = minimumSpanningTree.begin(), endEdgeInfo = minimumSpanningTree.end(); edgeInfo != endEdgeInfo; ++edgeInfo)
 	{
@@ -140,9 +200,10 @@ void testAStar()
 
 int main(int argc, char** argv)
 {
-	//testDijkstra();
+	testDijkstra();
 	testAStar();
-	//testKruskal();
+	testKruskal();
+	testPrim();
 
 	cout << "Press enter to close.." << endl;
 
