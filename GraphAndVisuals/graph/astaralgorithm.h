@@ -1,5 +1,5 @@
-#ifndef GRAPH_DIJKSTRA_ALGORITHM_H
-#define GRAPH_DIJKSTRA_ALGORITHM_H
+#ifndef GRAPH_ASTAR_ALGORITHM_H
+#define GRAPH_ASTAR_ALGORITHM_H
 
 #include <map>
 #include <list>
@@ -14,9 +14,6 @@
 
 namespace graph
 {
-	
-	int iterationCount;
-
 	/*!
 	* \brief A* Shortest Paths algorithm 
 	*
@@ -95,7 +92,7 @@ namespace graph
 		* \param weightComputer object which computes the weight (see testclass for instruction)
 		* \param heuristic object which returns the heuristic value between current node and the goal node
         * \reentrant
-		*
+		* \note rename to getPath, because the path might not be the shortests
 		* \returns a list with the path from the start vertex to the end vertex!
 		*/
 		Path getShortestPath(V* start, 
@@ -164,7 +161,6 @@ namespace graph
 		PathMap shortestPathTo;
 		PathDescPQueue priorityItems;
 		VertexSet done;
-		iterationCount = 0;
 				
 		// do not process paths leading to the start vertex anymore
 		done.insert(start);
@@ -180,7 +176,6 @@ namespace graph
 	
 		while(!priorityItems.empty())
 		{
-			graph::iterationCount++;
 			//get the item with the highest priority and remove it from the queue
 			DistancePathDescriptor current(priorityItems.top());
 			priorityItems.pop();
@@ -238,4 +233,4 @@ namespace graph
 	}
 }
 
-#endif //GRAPH_DIJKSTRA_ALGORITHM_H
+#endif //GRAPH_ASTAR_ALGORITHM_H
