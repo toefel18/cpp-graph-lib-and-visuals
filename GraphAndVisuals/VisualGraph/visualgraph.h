@@ -10,6 +10,7 @@
 #include "guiedge.h"
 
 class QGraphicsView;
+class QShortcut;
 
 /*!
 * \brief Visual Graph main window
@@ -37,6 +38,13 @@ private:
 
 	QWidget *mainWidget;
 	QGraphicsView *graphicsView;
+
+	QShortcut *addVertexShortcut;
+	QShortcut *addEdgesShortcut;
+	QShortcut *setStartVertexShortcut;
+	QShortcut *setEndVertexShortcut;
+	QShortcut *clearAllShortcut;
+
 };
 
 #endif // VISUALGRAPH_H

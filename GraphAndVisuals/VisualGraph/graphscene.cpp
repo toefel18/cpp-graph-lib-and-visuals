@@ -17,6 +17,7 @@
 GraphScene::GraphScene(QObject *parent, Graph *graph)
 	: QGraphicsScene(parent), editMode(VERTEX_EDIT), graph(graph)
 {
+	startVertex = endVertex = 0;
 	defaultColor = Qt::black;
 	selectedColor = Qt::blue;
 	startColor = Qt::red;
@@ -49,6 +50,10 @@ void GraphScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEve
 	 
 	 QAction *addVertex;
 	 QAction *addEdge;
+	 
+	 QAction *setStart;
+	 QAction *setEnd;
+	 QAction *clearAll;
 
 	 QAction *runDijkstra;
 	 QAction *runDijkstraDistances;
@@ -65,10 +70,21 @@ void GraphScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEve
 	 //}
 	 //else if (editMode == EDGE_EDIT)
 	 //{
-		 addEdge = new QAction("Add edge(s)", this);
+		 addEdge = new QAction("Add edge(s) (shortcut: e)", this);
 		 menu.addAction(addEdge);
 		 //menu.insertAction(vertexEdit, addEdge);
 //		 edgeEdit->setEnabled(false);
+
+		 setStart = menu.addAction("Set start vertex (shortcut: s)");
+		 connect(setStart, SIGNAL(triggered()), this, SLOT(setStartVertex()));
+
+		 setEnd = menu.addAction("Set target vertex (shortcut: t)");
+		 connect(setEnd, SIGNAL(triggered()), this, SLOT(setEndVertex()));
+
+		 clearAll = menu.addAction("Clear results and start/end vertex (shortcut: c)");
+		 connect(clearAll, SIGNAL(triggered()), this, SLOT(clearStartEndVertex()));
+		 connect(clearAll, SIGNAL(triggered()), this, SLOT(resetColorsAndText()));
+
 	 //}
 	 //else
 	 //{
@@ -106,24 +122,67 @@ void GraphScene::contextMenuEvent(QGraphicsSceneContextMenuEvent *contextMenuEve
 		 addEdges();
 }
 
+void GraphScene::setStartVertex()
+{
+	QList<QGraphicsItem*> items = selectedItems();
+
+	if(items.size() >= 1)
+	{
+		if(startVertex != 0)
+			startVertex->setColor(defaultColor);
+
+		startVertex = dynamic_cast<GuiVertex*>(items[0]);
+		startVertex->setColor(startColor);
+		startVertex->setSelected(false);
+	}
+}
+
+void GraphScene::setEndVertex()
+{
+	QList<QGraphicsItem*> items = selectedItems();
+
+	if(items.size() >= 1)
+	{
+		if(endVertex != 0)
+			endVertex->setColor(defaultColor);
+
+		endVertex = dynamic_cast<GuiVertex*>(items[0]);
+		endVertex->setColor(endColor);
+		endVertex->setSelected(false);
+	}
+}
+
+void GraphScene::clearStartEndVertex()
+{
+	if(startVertex != 0)
+		startVertex->setColor(defaultColor);
+
+	if(endVertex != 0)
+		endVertex->setColor(defaultColor);	
+
+	startVertex = endVertex = 0;
+}
+
+
 void GraphScene::runDijkstraSPF()
 {
 	resetColorsAndText();
 
-	QList<QGraphicsItem*> items = selectedItems();
+	//QList<QGraphicsItem*> items = selectedItems();
 
-	if(items.size() == 2)
+	//if(items.size() == 2)
+	//{
+	//	GuiVertex *start = dynamic_cast<GuiVertex*>(items[0]);
+	//	GuiVertex *end = dynamic_cast<GuiVertex*>(items[1]);
+	if(startVertex != 0 && endVertex != 0 && startVertex != endVertex)
 	{
-		GuiVertex *start = dynamic_cast<GuiVertex*>(items[0]);
-		GuiVertex *end = dynamic_cast<GuiVertex*>(items[1]);
-
 		typedef graph::DijkstraAlgorithm<GuiVertex, EdgeWithPtr> Dijkstra;
 		Dijkstra dijkstra(*graph);
-		Dijkstra::Path path = dijkstra.getShortestPath(start, end);
+		Dijkstra::Path path = dijkstra.getShortestPath(startVertex, endVertex);
 		
 		Dijkstra::Path::iterator itr = path.begin();
 
-		start->setColor(startColor);
+		startVertex->setColor(startColor);
 
 		for( ; itr != path.end(); ++itr)
 		{
@@ -131,7 +190,7 @@ void GraphScene::runDijkstraSPF()
 			itr->second.getGuiEdge()->setColor(pathEdgeColor);
 		}
 
-		end->setColor(endColor);
+		endVertex->setColor(endColor);
 	}
 }
 
@@ -139,19 +198,20 @@ void GraphScene::runDijkstraDistances()
 {
 	resetColorsAndText();
 
-	QList<QGraphicsItem*> items = selectedItems();
+	//QList<QGraphicsItem*> items = selectedItems();
 
-	if(items.size() == 1)
+	//if(items.size() == 1)
+	//{
+	//	GuiVertex *start = dynamic_cast<GuiVertex*>(items[0]);
+	if(startVertex != 0)
 	{
-		GuiVertex *start = dynamic_cast<GuiVertex*>(items[0]);
-
 		typedef graph::DijkstraAlgorithm<GuiVertex, EdgeWithPtr> Dijkstra;
 		Dijkstra dijkstra(*graph);
-		Dijkstra::DistanceMap distances = dijkstra.getShortestDistances(start);
+		Dijkstra::DistanceMap distances = dijkstra.getShortestDistances(startVertex);
 		
 		Dijkstra::DistanceMap::iterator itr = distances.begin();
 
-		start->setColor(startColor);
+		startVertex->setColor(startColor);
 
 		for( ; itr != distances.end(); ++itr)
 		{
@@ -164,20 +224,21 @@ void GraphScene::runAStar()
 {
 	resetColorsAndText();
 
-	QList<QGraphicsItem*> items = selectedItems();
+	//QList<QGraphicsItem*> items = selectedItems();
 
-	if(items.size() == 2)
-	{
-		GuiVertex *start = dynamic_cast<GuiVertex*>(items[0]);
-		GuiVertex *end = dynamic_cast<GuiVertex*>(items[1]);
-		
+	//if(items.size() == 2)
+	//{
+	//	GuiVertex *start = dynamic_cast<GuiVertex*>(items[0]);
+	//	GuiVertex *end = dynamic_cast<GuiVertex*>(items[1]);
+	if(startVertex != 0 && endVertex != 0 && startVertex != endVertex)
+	{		
 		typedef graph::AStarAlgorithm<GuiVertex, EdgeWithPtr> AStar;
 		AStar aStar(*graph);
-		AStar::Path path = aStar.getShortestPath(start, end);
+		AStar::Path path = aStar.getShortestPath(startVertex, endVertex);
 		
 		AStar::Path::iterator itr = path.begin();
 
-		start->setColor(startColor);
+		startVertex->setColor(startColor);
 
 		for( ; itr != path.end(); ++itr)
 		{
@@ -185,7 +246,7 @@ void GraphScene::runAStar()
 			itr->second.getGuiEdge()->setColor(pathEdgeColor);
 		}
 
-		end->setColor(endColor);
+		endVertex->setColor(endColor);
 	}
 }
 

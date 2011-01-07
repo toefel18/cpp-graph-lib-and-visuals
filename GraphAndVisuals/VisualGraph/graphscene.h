@@ -5,7 +5,6 @@
 
 class QGraphicsSceneMouseEvent;
 class QGraphicsSceneContextMenuEvent;
-class SimpleGuiVertex;
 class GuiVertex;
 class EdgeWithPtr;
 
@@ -53,6 +52,11 @@ public slots:
 	void runKruskal();
 	void runPrim();
 	
+	//sets the current selected vertex as start vertex
+	void setStartVertex();
+	void setEndVertex();
+	void clearStartEndVertex();
+
 	void resetColorsAndText();
 
 protected:
@@ -66,6 +70,9 @@ protected:
 	QColor endColor;
 	QColor pathEdgeColor;
 	QColor pathVertexColor;
+
+	GuiVertex *startVertex;
+	GuiVertex *endVertex;
 
 	EditMode editMode;
 	Graph *graph;
