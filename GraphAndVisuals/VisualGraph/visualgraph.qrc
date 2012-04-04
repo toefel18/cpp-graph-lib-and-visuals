@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="VisualGraph">
-      <file>Resources/icon.png</file>
-    </qresource>
-</RCC>
