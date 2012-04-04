@@ -1,0 +1,5 @@
+//Graph Project Configuration
+
+#define GRAPH_VERSION_MAJOR @Graph_VERSION_MAJOR@
+#define GRAPH_VERSION_MINOR @Graph_VERSION_MINOR@
+

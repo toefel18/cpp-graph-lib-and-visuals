@@ -8,6 +8,9 @@
 #include <iterator>
 #include <stdexcept>
 
+#include "vertex.h"
+#include "edge.h"
+
 namespace graph
 {
 	/*!
@@ -141,7 +144,7 @@ namespace graph
 	* \date	12-12-2010 
 	* \note tested on VC++ 10.0 and mingw GCC 4.4
 	*/
-	template <class V = Vertex, class E = Edge>
+	template <typename V = Vertex, typename E = Edge>
 	class AdjacencyList
 	{
 	public: 
@@ -181,7 +184,7 @@ namespace graph
 		* \param from pointer to the start vertex (will be added to the graph if it is not in the graph already)
 		* \param to pointer to the end end vertex (will be added to the graph if it is not in the graph already)
 		* \param edge the edge descriptor (will be copied) 
-		* \param directed if false we add an extra edge from ´to´ to ´from´.
+		* \param directed if false we add an extra edge from ï¿½toï¿½ to ï¿½fromï¿½.
 		*		 this is default behaviour and creates an undirected graph
 		*/
 		void addEdge(V *from, V *to, const E& edge, bool directed = false);

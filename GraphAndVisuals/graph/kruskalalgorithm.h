@@ -8,7 +8,12 @@
 #include <set>
 #include <iterator>
 #include <hash_map>
-#include <tuple>
+
+#ifdef __WIN32__
+	#include <tuple>
+#else
+	#include <tr1/tuple>
+#endif
 
 #include "vertex.h"
 #include "edge.h"
@@ -50,7 +55,7 @@ namespace graph
 		};
 
 		/*Type declarations*/
-		typedef std::tuple<const E*, const V*, const V*> EdgeMapItem;
+		typedef std::tr1::tuple<const E*, const V*, const V*> EdgeMapItem;
 		typedef std::vector<EdgeMapItem> EdgeMap;
 
 		/*!
@@ -115,7 +120,8 @@ namespace graph
 		// Map for speeding up edge to it's vertices.
 		Edge2vertices edge2vertices;
 
-		Graph::ConstVertexSetItr vertices = graph.vertexBegin(), endVertices = graph.vertexEnd();
+		typename Graph::ConstVertexSetItr vertices = graph.vertexBegin();
+		typename Graph::ConstVertexSetItr endVertices = graph.vertexEnd();
 
 		// Abort if graph is empty.
 		if(vertices == endVertices)
@@ -135,7 +141,7 @@ namespace graph
 			vertices2ForestGraph[*vertices] = forestGraph;
 
 			// Get edges and map it to vertices. Due the map edges will be unique.
-			for(Graph::ConstEdgeIterator neighbourVertices = graph.neighboursBegin(*vertices),
+			for(typename Graph::ConstEdgeIterator neighbourVertices = graph.neighboursBegin(*vertices),
 				endNeighbourVertices = graph.neighboursEnd(*vertices);
 				neighbourVertices.valid() && neighbourVertices != endNeighbourVertices; ++neighbourVertices)
 			{
@@ -146,7 +152,7 @@ namespace graph
 		// Create a list containing all the edges in the graph, sorted by distance.
 		OrderedEdges orderedEdges;
 
-		for(Edge2vertices::const_iterator it = edge2vertices.begin(), end = edge2vertices.end(); it != end; ++it)
+		for(typename Edge2vertices::const_iterator it = edge2vertices.begin(), end = edge2vertices.end(); it != end; ++it)
 		{
 			orderedEdges.insert(std::pair<const E*, const E*>((*it).first, (*it).first));
 		}
@@ -157,7 +163,7 @@ namespace graph
 		while(!orderedEdges.empty() && forest.size() > 1)
 		{
 			// Obtain and remove an edge with minimum weight from edges.
-			OrderedEdges::const_iterator bestEdgeIterator = orderedEdges.begin();
+			typename OrderedEdges::const_iterator bestEdgeIterator = orderedEdges.begin();
 		
 			const E* minimalEdge = (*bestEdgeIterator).first;
 
@@ -166,8 +172,8 @@ namespace graph
 			// Does the edge connects two different trees?
 			VertexPair vertices = edge2vertices[minimalEdge];
 
-			V* vertexA = std::get<0>(vertices);
-			V* vertexB = std::get<1>(vertices);
+			V* vertexA = vertices.first;
+			V* vertexB = vertices.second;
 
 			ForestGraph* forestGraphA = vertices2ForestGraph[vertexA];
 			ForestGraph* forestGraphB = vertices2ForestGraph[vertexB];
@@ -177,7 +183,7 @@ namespace graph
 				// Unite the two trees into a single tree and discard one.
 				forestGraphA->insert(forestGraphA->end(), forestGraphB->begin(), forestGraphB->end());
 
-				for(ForestGraph::const_iterator it = forestGraphB->cbegin(), end = forestGraphB->cend(); it != end; ++it) 
+				for(typename ForestGraph::const_iterator it = forestGraphB->cbegin(), end = forestGraphB->cend(); it != end; ++it)
 				{
 					vertices2ForestGraph[*it] = forestGraphA;
 				}

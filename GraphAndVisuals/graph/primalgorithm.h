@@ -47,7 +47,7 @@ namespace graph
 		};
 
 		/*Type declarations*/
-		typedef std::tuple<const E*, const V*, const V*> EdgeMapItem;
+		typedef std::tr1::tuple<const E*, const V*, const V*> EdgeMapItem;
 		typedef std::vector<EdgeMapItem> EdgeMap;
 
 		/*!
@@ -99,7 +99,7 @@ namespace graph
 		// Use ordered balanced binary tree for fast best edge lookups (always root item) and to map edges to vertices.
 		typedef std::multimap<const E*, VertexPair, EdgeDistanceComparer> Edge2vertices;
 
-		Graph::ConstVertexSetItr vertices = graph.vertexBegin(), endVertices = graph.vertexEnd();
+		typename Graph::ConstVertexSetItr vertices = graph.vertexBegin(), endVertices = graph.vertexEnd();
 
 		// Abort if graph is empty.
 		if(vertices == endVertices)
@@ -108,7 +108,7 @@ namespace graph
 		// Select the first vertex with edges if none is given.
 		for(; firstVertex == 0 && vertices != endVertices; ++vertices)
 		{
-			Graph::ConstEdgeIterator neighbours = graph.neighboursBegin(*vertices);
+			typename Graph::ConstEdgeIterator neighbours = graph.neighboursBegin(*vertices);
 
 			if(neighbours != graph.neighboursEnd(*vertices))
 				firstVertex = *vertices;
@@ -121,7 +121,7 @@ namespace graph
 		Edge2vertices possibleEdges;
 
 		// Add edges of first vertex as possible edges.
-		for(Graph::ConstEdgeIterator neighbour = graph.neighboursBegin(firstVertex), endNeighbours = graph.neighboursEnd(firstVertex);
+		for(typename Graph::ConstEdgeIterator neighbour = graph.neighboursBegin(firstVertex), endNeighbours = graph.neighboursEnd(firstVertex);
 			neighbour != endNeighbours; ++neighbour)
 		{
 			possibleEdges.insert(std::pair<const E*, VertexPair>(&(neighbour.edge()), VertexPair(firstVertex, neighbour.vertex())));
@@ -137,21 +137,22 @@ namespace graph
 		while(reachedVertices.size() != graph.getNumVertices() && possibleEdges.size() > 0)
 		{
 			// Get best edge.
-			Edge2vertices::const_iterator bestEdgeIterator = possibleEdges.begin();
+			typename Edge2vertices::const_iterator bestEdgeIterator = possibleEdges.begin();
 
 			const E* bestEdge = (*bestEdgeIterator).first;
-			V* reachedVertex = std::get<1>((*bestEdgeIterator).second);
+
+			V* reachedVertex = (*bestEdgeIterator).second.second;
 
 			// Store selected edge.
-			selectedEdges.insert(selectedEdges.begin(), EdgeMapItem(bestEdge, std::get<0>((*bestEdgeIterator).second), reachedVertex));
+			selectedEdges.insert(selectedEdges.begin(), EdgeMapItem(bestEdge, (*bestEdgeIterator).second.second, reachedVertex));
 
 			// Mark new vertex as reached.
 			reachedVertices.insert(reachedVertices.begin(), reachedVertex);
 
 			// Get edges from new reached vertex.
-			ReachedVertices::const_iterator endReachedVertices = reachedVertices.end();
+			typename ReachedVertices::const_iterator endReachedVertices = reachedVertices.end();
 
-			for(Graph::ConstEdgeIterator neighbour = graph.neighboursBegin(reachedVertex), endNeighbours = graph.neighboursEnd(reachedVertex);
+			for(typename Graph::ConstEdgeIterator neighbour = graph.neighboursBegin(reachedVertex), endNeighbours = graph.neighboursEnd(reachedVertex);
 			neighbour != endNeighbours; ++neighbour)
 			{
 				V* newReachableVertex = neighbour.vertex();
@@ -165,7 +166,7 @@ namespace graph
 				else
 				{	
 					// Remove possible edge from the new reached vertex, to avoid loops.
-					Edge2vertices::const_iterator deleteEdge = possibleEdges.find(&(neighbour.edge()));
+					typename Edge2vertices::const_iterator deleteEdge = possibleEdges.find(&(neighbour.edge()));
 
 					if(deleteEdge != possibleEdges.end())
 						possibleEdges.erase(deleteEdge);
