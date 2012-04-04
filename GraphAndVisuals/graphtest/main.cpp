@@ -1,5 +1,5 @@
 #include <iostream>
-#ifdef __WIN32__
+#ifdef WIN32
 	#include <tuple>
 #else
 	#include <tr1/tuple>

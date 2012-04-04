@@ -9,7 +9,7 @@
 #include <iterator>
 #include <hash_map>
 
-#ifdef __WIN32__
+#ifdef WIN32
 	#include <tuple>
 #else
 	#include <tr1/tuple>
