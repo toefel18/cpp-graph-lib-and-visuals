@@ -1,0 +1,31 @@
+# based on -> http://www.kdab.com/using-cmake-with-qt-5/
+
+if(CMAKE_COMPILER_IS_GNUCXX)
+	set (CMAKE_CXX_FLAGS "-std=c++0x")
+endif()
+
+# find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+# instruct CMake to run moc automatically when needed.
+set(CMAKE_AUTOMOC ON)
+# finds the qt5 widgets library and its dependencies (qt gui and qt core)
+find_package(Qt5Widgets REQUIRED)
+
+# only include headers that need to be processed by MOC
+set(VisualGraph_HEADERS visualgraph.h graphscene.h)
+set(VisualGraph_SOURCES main.cpp visualgraph.cpp guivertex.cpp guiedge.cpp graphscene.cpp)
+# set(VisualGraph_FORMS form.ui) #this project does not use any forms
+set(VisualGraph_RESOURCES visualgraph.qrc)
+
+#set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
+# compile the resources and put it in RESOURCES_RCC
+qt5_add_resources(VisualGraph_RESOURCES_RCC ${VisualGraph_RESOURCES})
+
+# define the executable for the gui project
+add_executable(VisualGraph ${VisualGraph_SOURCES} ${VisualGraph_RESOURCES_RCC})
+
+# link with QT
+target_link_libraries(VisualGraph Qt5::Widgets)

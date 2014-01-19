@@ -7,7 +7,6 @@
 #include <queue>
 #include <set>
 #include <iterator>
-#include <hash_map>
 
 #ifdef WIN32
 	#include <tuple>
