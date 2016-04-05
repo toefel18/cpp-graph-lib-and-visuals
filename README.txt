@@ -1,3 +1,9 @@
+# C++ graph template library and with GUI
+
+Simple and extensible graph library for C++, supporting shortest path algorithms and minimum spanning tree algorithms. 
+
+### Extra instructions for Qt 5 users
+
 This project users QT4 by default. 
 With minor changes, QT5 can be used. 
 
